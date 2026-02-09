@@ -1,0 +1,74 @@
+## Marking Criterias
+
+- Planning 20%
+	- Two or more well-developed personas with realistic goals and pain points. 
+  - Clear product vision derived from personas. 
+  - Product backlog is logically structured by features/epics. 
+  - Sprint 1 & 2 summaries show prioritisation, learning, and justified change.
+  
+- User Stories 20%
+	- Consistently follow As a  [] I want  [] So that  [] 
+	- Focus on user value
+	- Small and sprint-sized
+	- Clear and testable (Given/When/Then)
+	- MoSCoW priorities justified
+  
+- Design 20%
+	- Appropriate class and sequence diagrams linked to user stories
+	- Diagrams support understanding of data and interactions
+	- Design decisions explained
+	- Changes across sprints justified
+  
+- Working Prototype w/ Implemented Features 20%
+	- Video demonstrates 3 core end-to-end features
+	- Each feature clearly maps to user stories & acceptance criteria
+	- Input > Processing > Output
+  
+- Testing & Evaluation 20%
+	- Two activity diagrams
+	- Each diagram describes a non-trivial scenario of interest
+	- Include control nodes (start-stop), decision nodes and branching, swim lanes to represent roles or subsystems
+
+  ## Sprint 1 Requirements (Weeks 2-6)
+- Stories selected
+- Design (class diagram, sequence diagram) 
+- Implementation of one core end-to-end feature derived from one or more user stories to demonstrate a working MVP. It can run it locally or online, demonstrate input - processing - output and show a clear connection to the acceptance criteria. 
+- Simple web page with: 
+	- HTML form
+	- Basic backend logic
+- Testing explicitly mapped to the stories and acceptance criteria.
+
+
+## App Idea
+
+Assessment Tracker
+1. Form to input a new assessment
+2. Assessment Tracker in table form, listed chronologically
+	1. Colour formatted to the specific module?
+  2. Displays time till assessment
+3. Clicking on an assessment displays a new page ->
+	1. To-do list
+	2. Progress tracker (% completed)
+	3. Detailed notes
+	4. Countdown to due date/time
+	5. Revision materials (saved links)
+4. Feature 3 - ?? 
+
+## Planning Requirements
+
+- 2 Personas
+- 3 Core user stories -> 3 Core end-to-end features
+
+
+## TA Questions
+
+1. Personas - what exactly is a persona - can it be two distinctly different students?
+2. Ask if our basic idea and core features are acceptable
+3. Do we need to adopt Agile practices -> Kanban, scrumming etc.
+4. Does it matter how much people contribute to the actual codebase in terms of commits?
+5. How detailed do the personas and user stories need to be, given they account for 40% of the total mark?
+6. Testing & Evaluation -> Difference between the "activity diagrams" and the class/sequence diagrams from the design phase?
+
+
+
+  

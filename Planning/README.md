@@ -1,8 +1,8 @@
 Your product backlog and user stories are the primary evidence of your work.
 Every user story marked as “Done” must be linked to concrete evidence, such as:
-• A UML diagram
-• Source code with corresponding Git commit references
-• Acceptance test evidence (e.g. screenshots, logs, or test outputs).
+- A UML diagram
+- Source code with corresponding Git commit references
+- Acceptance test evidence (e.g. screenshots, logs, or test outputs).
 Note: If a story is marked “Done” without evidence, it will not be treated as complete.
 
 - Planning 20%

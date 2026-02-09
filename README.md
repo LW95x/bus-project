@@ -4,22 +4,22 @@
 
 # Sample Workflow
 
-Pull the most recent version of the repository
+1. Pull the most recent version of the repository
 ```git pull origin main```
 
-Create a branch
+2. Create a branch
 ```git checkout -b <branch-name>```
 
-Add, commit, push branch
+3. Add, commit, push branch
 ```
 git add .
 git commit -m "detailed commit message"
 git push -u origin <branch-name>
 ```
 
-Open Pull Request (PR) on GitHub
+4. Open Pull Request (PR) on GitHub
 
-After PR is merged
+5. After PR is merged
 ```
 git checkout main
 git pull origin main

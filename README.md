@@ -1,6 +1,6 @@
 # Cloning the Repo (only needs to be done once)
 
-git clone https://github.com/LW95x/bus-project.git
+```git clone https://github.com/LW95x/bus-project.git```
 
 # Sample Workflow
 

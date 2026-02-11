@@ -1,0 +1,20 @@
+# TA Meeting Notes Week 4
+
+1. General Product Vision (Vision Statement)
+```
+FOR (target customer) 
+WHO (statement of the need or opportunity) 
+The (PRODUCT NAME) is a (product category) 
+THAT (key benefit, compelling reason to buy) 
+UNLIKE (primary competitive alternative) 
+OUR PRODUCT (statement of primary differentiation)
+```
+2. Try to think of more than 2 personas
+Use the lecture slides to guide the development of personas and user stories
+1 core user story -> 1 core end-to-end feature (need 3 in total)
+
+Gave an idea for enabling lecturers to add assignments (simple form integration -> could this be considered a feature?)
+
+3. Try to make personas distinctly different (name, backstory, etc. -> colour blind/ADHD considerations - accessibility?)
+4. Try to involve everyone in the coding side -> unsure if it actually matters if everyone is involved, said he would clarify with Wendy 
+5. Testing & Eval -> unsure, said he would clarify with Wendy

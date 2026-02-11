@@ -6,12 +6,16 @@ Create a new directory, ensure the terminal is inside the newly created director
 # Sample Workflow
 
 1. Pull the most recent version of the repository (always do this before you start making changes to the existing codebase)
-```git pull origin main```
+```
+git pull origin main
+```
 
-2. Create a branch (this encapsulates the changes to the codebase you are going to make)
-```git checkout -b <branch-name>```
+3. Create a branch (this encapsulates the changes to the codebase you are going to make)
+```
+git checkout -b <branch-name>
+```
 
-3. (Submitting your code for review) Add, commit, push branch
+5. (Submitting your code for review) Add, commit, push branch
 ```
 git add .
 git commit -m "detailed commit message"

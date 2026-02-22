@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+
+    <h1>Login</h1>
+
+    <form action='' method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username }}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <a href="{{ url_for('register') }}">Register new user</a>
+
+{% endblock %}

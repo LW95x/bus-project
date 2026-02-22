@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Page{% endblock %}
+
+{% block content %}
+
+    <h1>Register</h1>
+
+     <form action='' method="post" novalidate>
+         {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username }}<br>
+            {% for error in form.username.errors %}
+            <span> {{error }} </span>
+            {% endfor %}
+        </p>
+         <p>
+            {{ form.password.label }}<br>
+            {{ form.password }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <a href="{{ url_for('login') }}">Go to login</a>
+{% endblock %}

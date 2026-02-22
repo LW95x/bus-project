@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}All Assignments{% endblock %}
+
+{% block content %}
+
+<h1>All Tasks</h1>
+{% if tasks %}
+<table>
+    <thead>
+    <tr>
+        <th>Task</th>
+        <th>Completed</th>
+        <th>Date to be completed</th>
+        <th>Click to update the task</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for assignment in assignments %}
+    <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ "Yes" if task.completed else "No" }}</td>
+        <td>{{ task.date_completed }}</td>
+        <td><a href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}">Update this assignment</a> </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    <a href="{{ url_for('index') }}">Return to Home</a><br><br>
+{% endif %}
+{% endblock %}

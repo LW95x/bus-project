@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Stacked Deck{% endblock %}
+
+{% block content %}
+
+    <h1></h1>
+
+     <form action='' method="post" novalidate>
+         {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title }}<br>
+        </p>
+        <p>
+            {{ form.completed.label }}<br>
+            {{ form.completed }}<br>
+        </p>
+        <p>
+            {{ form.date_completed.label }}<br>
+            {{ form.date_completed }}<br>
+        </p>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+
+     <a href="{{ url_for('view_assignments') }}">View all assignments</a>
+
+{% endblock %}

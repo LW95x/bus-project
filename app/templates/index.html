@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Stacked Deck{% endblock %}
+
+{% block content %}
+
+    <a href="{{ url_for('add_assignment') }}">Add Assignment</a>
+    <br>
+    <a href="{{ url_for('view_assignments') }}">View Assignments</a>
+
+{% endblock %}

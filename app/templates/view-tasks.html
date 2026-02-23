@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+
+<h1 class="display-6 fw-bold text-primary">Your Tasks</h1>
+<hr>
+{% if tasks %}
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Module</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Scheduled For</th>
+        <th>Context</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for task in tasks %}
+    <tr>
+       <td>{{ task.module }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.priority.name.capitalize() }}</td>
+        <td>{{ task.scheduled_time.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>
+            {% if task.exam %}
+                <p><b>Exam:</b> {{ task.exam.module }}</p>
+            {% elif task.assignment %}
+                <p><b>Coursework:</b> {{ task.assignment.title }}</p>
+            {% else %}
+                <p>General</p>
+            {% endif %}
+        </td>
+        <td>
+            <form action="{{ url_for('toggle_status', item_type='task', item_id=task.id) }}" method="POST">
+                <input type="checkbox" onchange="this.form.submit()" 
+                {% if task.completed %}checked{% endif %}>
+            </form>
+        </td>
+        <td>
+            <a href="{{ url_for('updating_task', task_id=task.id) }}" class="btn btn-outline-secondary">Update</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<hr />
+<div class="d-flex">
+  <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
+    >Return to Home</a
+  >
+  <a
+    href="{{ url_for('add_task') }}"
+    class="btn btn-outline-primary ms-auto"
+    >Add New Task</a
+  >
+</div>
+{% else %}
+<p><a href="{{ url_for('add_task') }}" class="btn btn-outline-primary">No tasks found. Add one here</a></p>
+
+{% endif %}
+{% endblock %}

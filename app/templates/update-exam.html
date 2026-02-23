@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Update Exam{% endblock %}
+
+{% block content %}
+    <h1 class="display-6 fw-bold text-primary">Update Exam</h1>
+    <hr>
+     <form action='' method="post" novalidate>
+         {{ form.hidden_tag() }}
+        <p>
+            {{ form.module.label(class="form-label") }}<br>
+            {{ form.module(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.exam_date.label(class="form-label") }}<br>
+            {{ form.exam_date(class="form-control") }}<br>
+            {% for error in form.exam_date.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.duration_minutes.label(class="form-label") }}<br>
+            {{ form.duration_minutes(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.priority.label(class="form-label") }}<br>
+            {{ form.priority(class="form-control") }}<br>
+        </p>
+        <div class="d-flex">
+            <a href="{{ url_for('view_exams') }}" class="btn btn-outline-primary">← Go Back</a>
+        {{ form.submit(class="btn btn-outline-primary ms-auto") }}
+        </div>
+        <hr>
+    </form>
+{% endblock %}

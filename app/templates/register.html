@@ -3,24 +3,26 @@
 {% block title %}Registration Page{% endblock %}
 
 {% block content %}
-
-    <h1>Register</h1>
+    <h1 class="display-6 fw-bold text-primary">Register</h1>
+    <hr>
 
      <form action='' method="post" novalidate>
          {{ form.hidden_tag() }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username }}<br>
+            {{ form.username.label(class="form-label") }}<br>
+            {{ form.username(class="form-control") }}<br>
             {% for error in form.username.errors %}
             <span> {{error }} </span>
             {% endfor %}
         </p>
          <p>
-            {{ form.password.label }}<br>
-            {{ form.password }}<br>
+            {{ form.password.label(class="form-label") }}<br>
+            {{ form.password(class="form-control") }}<br>
         </p>
-        <p>{{ form.submit() }}</p>
+        <div class="d-flex">
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary">← Login Page</a>
+        {{ form.submit(class="btn btn-outline-primary ms-auto") }}
+        </div>
+        <hr>
     </form>
-
-    <a href="{{ url_for('login') }}">Go to login</a>
 {% endblock %}

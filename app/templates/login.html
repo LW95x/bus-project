@@ -3,22 +3,23 @@
 {% block title %}Login Page{% endblock %}
 
 {% block content %}
-
-    <h1>Login</h1>
-
+    <h1 class="display-6 fw-bold text-primary">Login</h1>
+    <hr>
     <form action='' method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username }}
+            {{ form.username.label(class="form-label") }}<br>
+            {{ form.username(class="form-control") }}
         </p>
         <p>
-            {{ form.password.label }}<br>
-            {{ form.password }}
+            {{ form.password.label(class="form-label") }}<br>
+            {{ form.password(class="form-control") }}
         </p>
-        <p>{{ form.submit() }}</p>
+                        <div class="d-flex">
+            <a href="{{ url_for('register') }}" class="btn btn-outline-primary">← Register Page</a>
+        {{ form.submit(class="btn btn-outline-primary ms-auto") }}
+        </div>
+        <hr>
     </form>
-
-    <a href="{{ url_for('register') }}">Register new user</a>
 
 {% endblock %}

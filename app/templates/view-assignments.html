@@ -1,31 +1,69 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %}Assignments{% endblock %} {% block
+content %}
 
-{% block title %}All Assignments{% endblock %}
-
-{% block content %}
-
-<h1>All Tasks</h1>
-{% if tasks %}
-<table>
-    <thead>
+<h1 class="display-6 fw-bold text-primary">Your Assignments</h1>
+<hr />
+{% if assignments %}
+<table class="table table-hover table-striped">
+  <thead>
     <tr>
-        <th>Task</th>
-        <th>Completed</th>
-        <th>Date to be completed</th>
-        <th>Click to update the task</th>
+      <th>Title</th>
+      <th>Priority</th>
+      <th>Due Date</th>
+      <th>Status</th>
+      <th>Actions</th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     {% for assignment in assignments %}
     <tr>
-        <td>{{ task.title }}</td>
-        <td>{{ "Yes" if task.completed else "No" }}</td>
-        <td>{{ task.date_completed }}</td>
-        <td><a href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}">Update this assignment</a> </td>
+      <td>{{ assignment.title }}</td>
+      <td>{{ assignment.priority.name.capitalize() }}</td>
+      <td>{{ assignment.due_date.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>
+        <form
+          action="{{ url_for('toggle_status', item_type='assignment', item_id=assignment.id) }}"
+          method="POST"
+        >
+          <input
+            type="checkbox"
+            onchange="this.form.submit()"
+            {%
+            if
+            assignment.completed
+            %}checked{%
+            endif
+            %}
+          />
+        </form>
+      </td>
+      <td>
+        <a
+          href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}"
+          class="btn btn-outline-secondary"
+          >Update</a
+        >
+      </td>
     </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
-    <a href="{{ url_for('index') }}">Return to Home</a><br><br>
-{% endif %}
-{% endblock %}
+<hr />
+<div class="d-flex">
+  <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
+    >Return to Home</a
+  >
+  <a
+    href="{{ url_for('add_assignment') }}"
+    class="btn btn-outline-primary ms-auto"
+    >Add New Assignment</a
+  >
+</div>
+{% else %}
+<p>
+  <a href="{{ url_for('add_assignment') }}" class="btn btn-outline-primary"
+    >No assignments found. Add one here</a
+  >
+</p>
+
+{% endif %} {% endblock %}

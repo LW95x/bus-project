@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Update Task{% endblock %}
+
+{% block content %}
+    <h1 class="display-6 fw-bold text-primary">Update Task</h1>
+    <hr>
+     <form action='' method="post" novalidate>
+         {{ form.hidden_tag() }}
+<p>
+            {{ form.module.label(class="form-label") }}<br>
+            {{ form.module(class="form-control") }}<br>
+        </p>
+
+        <p>
+            {{ form.description.label(class="form-label") }}<br>
+            {{ form.description(class="form-control") }}<br>
+        </p>
+
+        <p>
+            {{ form.scheduled_time.label(class="form-label") }}<br>
+            {{ form.scheduled_time(class="form-control") }}<br>
+            {% for error in form.scheduled_time.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.duration_minutes.label(class="form-label") }}<br>
+            {{ form.duration_minutes(class="form-control") }}<br>
+        </p>
+
+        <p>
+            {{ form.priority.label(class="form-label") }}<br>
+            {{ form.priority(class="form-control") }}<br>
+        </p>   
+        <hr>
+        <h3 class="display-9 fw-bold text-primary">Link to an existing exam or assignment (optional)</h3>
+        <hr>
+        <p>
+            {{ form.exam_id.label(class="form-label") }}<br>
+            {{ form.exam_id(class="form-control") }}<br>
+        </p>
+
+        <p>
+            {{ form.assignment_id.label(class="form-label") }}<br>
+            {{ form.assignment_id(class="form-control") }}<br>
+        </p>
+                <div class="d-flex">
+            <a href="{{ url_for('view_tasks') }}" class="btn btn-outline-primary">← Go Back</a>
+        {{ form.submit(class="btn btn-outline-primary ms-auto") }}
+        </div>
+        <hr>
+    </form>
+
+    <script>
+        const examSelect = document.getElementById('exam_id');
+        const assignmentSelect = document.getElementById('assignment_id');
+
+        examSelect.addEventListener('change', () => {
+            if (examSelect.value !== "0") {
+                assignmentSelect.value = "0";
+            }
+        });
+
+        assignmentSelect.addEventListener('change', () => {
+            if (assignmentSelect.value !== "0") {
+                examSelect.value = "0";
+            }
+        });
+    </script>
+{% endblock %}

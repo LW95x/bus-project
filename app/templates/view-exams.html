@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}All Exams{% endblock %}
+
+{% block content %}
+
+<h1 class="display-6 fw-bold text-primary">Your Exams</h1>
+<hr>
+{% if exams %}
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Module</th>
+        <th>Priority</th>
+        <th>Date & Time</th>
+        <th>Duration</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for exam in exams %}
+    <tr>
+        <td>{{ exam.module }}</td>
+        <td>{{ exam.priority.name.capitalize() }}</td>
+        <td>{{ exam.exam_date.strftime('%d %b %Y, %H:%M') }}</td>
+        <td>{{ exam.duration_minutes }} mins</td>
+        <td>
+            <a href="{{ url_for('updating_exam', exam_id=exam.id) }}" class="btn btn-outline-secondary">Update</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<hr />
+<div class="d-flex">
+  <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
+    >Return to Home</a
+  >
+  <a
+    href="{{ url_for('add_exam') }}"
+    class="btn btn-outline-primary ms-auto"
+    >Add New Exam</a
+  >
+</div>
+{% else %}
+<p>
+  <a href="{{ url_for('add_exam') }}" class="btn btn-outline-primary"
+    >No exams found. Add one here</a
+  >
+</p>
+{% endif %}
+{% endblock %}

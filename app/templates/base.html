@@ -1,25 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     {% if title %}
-        <title>{{ title }}</title>
+    <title>{{ title }}</title>
     {% else %}
-        <title>Stacked Deck</title>
+    <title>Stacked Deck</title>
     {% endif %}
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    
-    <main>{% block content %}    {% endblock %}</main>
-</body>
+  <body>
+    <div class="container mb-5">
+    <header class="py-5 border-bottom shadow-sm mb-4">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold text-primary">
+              <a href="{{ url_for('index') }}" class="text-reset text-decoration-none">Stacked Deck</a>
+            </h1>
+            <p class="lead mb-0 text-muted">The Academic Planner</p>
+        </div>
+    </header>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <div class="alert alert-primary alert-dismissible">{{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <main>{% block content %} {% endblock %}</main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </div>
+  </body>
 </html>

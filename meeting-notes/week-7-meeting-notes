@@ -1,0 +1,51 @@
+## Sprint 1 Improvements:
+- Develop user stories -> assign to each persona
+- Class that manages all cards/assignments for student
+- Visibility for attributes -> private/public -> clearer?
+- Sequence Diagrams needed as high priority (draft - doesn't need to be perfect)
+- MVP -> provide clear definition of it
+
+## V1 Improvements for Sprint 2:
+- Delete functionality for assessments/exams/tasks
+- Filter by status/due date
+
+## V2 Improvements for Sprint 2:
+- Colour assignments/exams based on priority level -> 
+	- Red less than a week
+	- Yellow 1-2 weeks
+	- 2+ weeks normal
+- Ideally click each row to open up card
+- (Maybe) Change Tasks List to be "Revision Sessions" 
+- Interactive Card ->
+	- To-Do List for each assignment/exam card
+	- Displayed Progress tracker with % and # completed?
+	- Additional Notes section on each card
+	- (Maybe) Countdown to due date/time
+	- (Maybe) Revision Materials Links
+- Tasks Tracker ->
+	- Separate list for "completed tasks" that are ticked off beneath main table
+	- Tasks past due date -> greyed out?
+
+## Marking Criteria for User Stories/Planning/Design Phases
+
+Design 20%
+
+Appropriate class and sequence diagrams linked to user stories
+Diagrams support understanding of data and interactions
+Design decisions explained
+Changes across sprints justified
+
+Planning 20%
+
+Two or more well-developed personas with realistic goals and pain points.
+Clear product vision derived from personas.
+Product backlog logically structured by features/epics.
+Sprint 1 & 2 summaries show prioritisation, learning, and justified change.
+
+User Stories 20%
+
+Consistently follow As a [] I want [] So that []
+Focus on user value
+Small and sprint-sized
+Clear and testable (Given/When/Then)
+MoSCoW priorities justified

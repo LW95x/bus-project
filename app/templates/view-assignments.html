@@ -1,9 +1,33 @@
-{% extends "base.html" %} {% block title %}Assignments{% endblock %} {% block
+{% extends "base.html" %} {% block title %}All Assignments{% endblock %} {% block
 content %}
 
 <h1 class="display-6 fw-bold text-primary">Your Assignments</h1>
 <hr />
-{% if assignments %}
+<form method="GET" class="d-flex gap-2 mb-1">
+  <select name="type" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="ascending" {% if type == "ascending" %}selected{% endif %}>
+      Earliest
+    </option>
+    <option value="descending" {% if type == "descending" %}selected{% endif %}>
+      Latest
+    </option>
+
+  </select>
+
+<select name="priority" class="form-select w-auto" onchange="this.form.submit()">
+  <option value="" {% if not priority %}selected{% endif %}>All Priorities</option>
+    <option value="1" {% if priority == "1" %}selected{% endif %}>
+      High
+    </option>
+    <option value="2" {% if priority == "2" %}selected{% endif %}>
+      Medium
+    </option>
+    <option value="3" {% if priority == "3" %}selected{% endif %}>
+      Low
+    </option>
+</select>
+</form>
+
 <table class="table table-hover table-striped">
   <thead>
     <tr>
@@ -16,6 +40,7 @@ content %}
     </tr>
   </thead>
   <tbody>
+    {% if assignments %}
     {% for assignment in assignments %}
     <tr>
       <td>{{ assignment.title }}</td>
@@ -52,8 +77,14 @@ content %}
       </td>
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="6" class="text-center">No assignments match the selected filters.</td>
+      </tr>
+    {% endif %}
   </tbody>
 </table>
+
 <hr />
 <div class="d-flex">
   <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
@@ -65,11 +96,5 @@ content %}
     >Add New Assignment</a
   >
 </div>
-{% else %}
-<p>
-  <a href="{{ url_for('add_assignment') }}" class="btn btn-outline-primary"
-    >No assignments found. Add one here</a
-  >
-</p>
 
-{% endif %} {% endblock %}
+{% endblock %}

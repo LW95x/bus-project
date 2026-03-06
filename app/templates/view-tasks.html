@@ -3,7 +3,49 @@
 
 <h1 class="display-6 fw-bold text-primary">Your Tasks</h1>
 <hr />
-{% if tasks %}
+
+<form method="GET" class="d-flex gap-2 mb-1">
+  <select name="type" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="ascending" {% if type == "ascending" %}selected{% endif %}>
+      Earliest
+    </option>
+    <option value="descending" {% if type == "descending" %}selected{% endif %}>
+      Latest
+    </option>
+  </select>
+
+<select name="priority" class="form-select w-auto" onchange="this.form.submit()">
+  <option value="" {% if not priority %}selected{% endif %}>All Priorities</option>
+    <option value="1" {% if priority == "1" %}selected{% endif %}>
+      High
+    </option>
+    <option value="2" {% if priority == "2" %}selected{% endif %}>
+      Medium
+    </option>
+    <option value="3" {% if priority == "3" %}selected{% endif %}>
+      Low
+    </option>
+</select>
+
+  <select name="exam_id" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="" {% if not selected_exam %}selected{% endif %}>All Exams</option>
+            {% for exam in user_exams %}
+                <option value="{{ exam.id }}" {% if selected_exam == exam.id|string %}selected{% endif %}>
+                    Exam: {{ exam.module }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="assignment_id" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="" {% if not selected_assign %}selected{% endif %}>All Assignments</option>
+            {% for assign in user_assigns %}
+                <option value="{{ assign.id }}" {% if selected_assign == assign.id|string %}selected{% endif %}>
+                    Assignment: {{ assign.title }}
+                </option>
+            {% endfor %}
+        </select>
+</form>
+
 <table class="table table-hover table-striped">
   <thead>
     <tr>
@@ -18,6 +60,7 @@
     </tr>
   </thead>
   <tbody>
+    {% if tasks %}
     {% for task in tasks %}
     <tr>
       <td>{{ task.module }}</td>
@@ -74,8 +117,14 @@
       </td>
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="8" class="text-center">No tasks match the selected filters.</td>
+      </tr>
+    {% endif %}
   </tbody>
 </table>
+
 <hr />
 <div class="d-flex">
   <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
@@ -85,11 +134,6 @@
     >Add New Task</a
   >
 </div>
-{% else %}
-<p>
-  <a href="{{ url_for('add_task') }}" class="btn btn-outline-primary"
-    >No tasks found. Add one here</a
-  >
-</p>
 
-{% endif %} {% endblock %}
+
+{% endblock %}

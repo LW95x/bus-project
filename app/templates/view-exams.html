@@ -1,44 +1,59 @@
-{% extends "base.html" %}
-
-{% block title %}All Exams{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}All Exams{% endblock %} {% block
+content %}
 
 <h1 class="display-6 fw-bold text-primary">Your Exams</h1>
-<hr>
+<hr />
 {% if exams %}
 <table class="table table-hover table-striped">
-    <thead>
+  <thead>
     <tr>
-        <th>Module</th>
-        <th>Priority</th>
-        <th>Date & Time</th>
-        <th>Duration</th>
-        <th>Actions</th>
+      <th>Module</th>
+      <th>Priority</th>
+      <th>Date & Time</th>
+      <th>Duration</th>
+      <th>Update</th>
+      <th>Delete</th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     {% for exam in exams %}
     <tr>
-        <td>{{ exam.module }}</td>
-        <td>{{ exam.priority.name.capitalize() }}</td>
-        <td>{{ exam.exam_date.strftime('%d %b %Y, %H:%M') }}</td>
-        <td>{{ exam.duration_minutes }} mins</td>
-        <td>
-            <a href="{{ url_for('updating_exam', exam_id=exam.id) }}" class="btn btn-outline-secondary">Update</a>
-        </td>
+      <td>{{ exam.module }}</td>
+      <td>{{ exam.priority.name.capitalize() }}</td>
+      <td>{{ exam.exam_date.strftime('%d %b %Y, %H:%M') }}</td>
+      <td>{{ exam.duration_minutes }} mins</td>
+      <td>
+        <a
+          href="{{ url_for('updating_exam', exam_id=exam.id) }}"
+          class="btn btn-outline-secondary"
+          >Update</a
+        >
+      </td>
+      <td>
+        <form
+          action="{{ url_for('delete_exam', exam_id=exam.id) }}"
+          method="POST"
+          style="display: inline"
+        >
+          <button
+            type="submit"
+            onclick="return confirm('Are you sure?');"
+            class="btn btn-outline-danger"
+          >
+            Delete
+          </button>
+        </form>
+      </td>
     </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 <hr />
 <div class="d-flex">
   <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
     >Return to Home</a
   >
-  <a
-    href="{{ url_for('add_exam') }}"
-    class="btn btn-outline-primary ms-auto"
+  <a href="{{ url_for('add_exam') }}" class="btn btn-outline-primary ms-auto"
     >Add New Exam</a
   >
 </div>
@@ -48,5 +63,4 @@
     >No exams found. Add one here</a
   >
 </p>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}

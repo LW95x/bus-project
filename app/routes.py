@@ -14,6 +14,50 @@ import sqlalchemy as sa
 def index():
     return render_template("index.html")
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_pw = generate_password_hash(form.password.data)
+
+        user = User(
+            username = form.username.data,
+            password_hash = hashed_pw
+        )
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+
+        flash("User registration was successful.")
+        return redirect(url_for('index'))
+
+    return render_template('register.html', form=form)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+
+        if user and check_password_hash(user.password_hash, form.password.data):
+            login_user(user)
+            flash("User login was successful.")
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password. Please try again.')
+            return redirect(url_for('login'))
+
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    flash("User logout was successful.")
+    return redirect(url_for('login'))
+
 @app.route('/add-assignment', methods=['GET', 'POST'])
 @login_required
 def add_assignment():
@@ -172,6 +216,60 @@ def updating_task(task_id):
 
     return render_template("update-task.html", form=form)
 
+@app.route('/delete-assignment/<int:assignment_id>', methods=['POST'])
+@login_required
+def delete_assignment(assignment_id):
+    assignment_to_delete = Assignment.query.get_or_404(assignment_id)
+
+    if assignment_to_delete.author == current_user:
+        try:
+            db.session.delete(assignment_to_delete)
+            db.session.commit()
+            flash("The assignment was successfully deleted.")
+        except:
+            db.session.rollback()
+            flash("An error occurred while deleting the assignment.")
+    else:
+        flash("You are not the owner of this assignment.")
+    
+    return redirect(url_for('view_assignments'))
+
+@app.route('/delete-exam/<int:exam_id>', methods=['POST'])
+@login_required
+def delete_exam(exam_id):
+    exam_to_delete = Exam.query.get_or_404(exam_id)
+
+    if exam_to_delete.author == current_user:
+        try:
+            db.session.delete(exam_to_delete)
+            db.session.commit()
+            flash("The exam was successfully deleted.")
+        except:
+            db.session.rollback()
+            flash("An error occurred while deleting the exam.")
+    else:
+        flash("You are not the owner of this exam.")
+
+    return redirect(url_for('view_exams'))
+
+@app.route('/delete-task/<int:task_id>', methods=['POST'])
+@login_required
+def delete_task(task_id):
+    task_to_delete = Task.query.get_or_404(task_id)
+
+    if task_to_delete.author == current_user:
+        try:
+            db.session.delete(task_to_delete)
+            db.session.commit()
+            flash("The task was successfully deleted.")
+        except:
+            db.session.rollback()
+            flash("An error occurred while deleting the task.")
+    else:
+        flash("You are not the owner of this task.")
+
+    return redirect(url_for('view_tasks'))
+
 @app.route('/toggle-<string:item_type>/<int:item_id>', methods=['POST'])
 @login_required
 def toggle_status(item_type, item_id):
@@ -184,47 +282,3 @@ def toggle_status(item_type, item_id):
         db.session.commit()
    
     return redirect(request.referrer or url_for('index'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_pw = generate_password_hash(form.password.data)
-
-        user = User(
-            username = form.username.data,
-            password_hash = hashed_pw
-        )
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-
-        flash("User registration was successful.")
-        return redirect(url_for('index'))
-
-    return render_template('register.html', form=form)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-
-        if user and check_password_hash(user.password_hash, form.password.data):
-            login_user(user)
-            flash("User login was successful.")
-            return redirect(url_for('index'))
-        else:
-            flash('Invalid username or password. Please try again.')
-            return redirect(url_for('login'))
-
-    return render_template('login.html', form=form)
-
-@app.route('/logout')
-@login_required
-def logout():
-    session.clear()
-    flash("User logout was successful.")
-    return redirect(url_for('login'))

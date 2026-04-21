@@ -33,11 +33,17 @@ class Assignment(db.Model):
         nullable=False
     )
 
+    notes: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
+
     # Relationship to the parent entity (user)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='assignments')
 
     tasks: so.Mapped[list['Task']] = so.relationship(back_populates='assignment', cascade="all, delete-orphan")
+    saved_materials: so.Mapped[list["SavedMaterial"]] = so.relationship(back_populates="assignment", cascade="all, delete-orphan")
+    todo_items: so.Mapped[list["ToDoItem"]] = so.relationship(
+    back_populates="assignment",
+    cascade="all, delete-orphan")
 
 class Exam(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -50,11 +56,18 @@ class Exam(db.Model):
         nullable=False
     )
 
+    notes: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
+
     # Relationship to the parent entity (user)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='exams')
 
     tasks: so.Mapped[list['Task']] = so.relationship(back_populates='exam', cascade="all, delete-orphan")
+    saved_materials: so.Mapped[list["SavedMaterial"]] = so.relationship(back_populates="exam",
+    cascade="all, delete-orphan")
+    todo_items: so.Mapped[list["ToDoItem"]] = so.relationship(
+    back_populates="exam",
+    cascade="all, delete-orphan")
 
 class Task(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -76,11 +89,68 @@ class Task(db.Model):
     author: so.Mapped[User] = so.relationship(back_populates='tasks')
 
     # Link the task to either an Exam, or an Assignment (i.e. revision, or coursework)
-    exam_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(Exam.id))
-    assignment_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(Assignment.id))
+    exam_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(Exam.id), nullable=True)
+    assignment_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey(Assignment.id), nullable=True)
 
     exam: so.Mapped[Optional['Exam']] = so.relationship(back_populates='tasks')
     assignment: so.Mapped[Optional['Assignment']] = so.relationship(back_populates='tasks')
+
+
+class SavedMaterial(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+
+    title: so.Mapped[str] = so.mapped_column(sa.String(150), nullable=False)
+    url: so.Mapped[str] = so.mapped_column(sa.String(500), nullable=False)
+
+    # Relationship to the parent entities (user, exam, assignment)
+    exam_id: so.Mapped[Optional[int]] = so.mapped_column(
+        sa.ForeignKey("exam.id"),
+        nullable=True)
+    assignment_id: so.Mapped[Optional[int]] = so.mapped_column(
+        sa.ForeignKey("assignment.id"),
+        nullable=True)
+
+    exam: so.Mapped[Optional["Exam"]] = so.relationship(
+        back_populates="saved_materials")
+    assignment: so.Mapped[Optional["Assignment"]] = so.relationship(
+        back_populates="saved_materials")
+
+class ToDoItem(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    description: so.Mapped[str] = so.mapped_column(sa.String(256), nullable=False)
+    completed: so.Mapped[bool] = so.mapped_column(
+        sa.Boolean,
+        default=False,
+        nullable=False,
+        index=True
+    )
+    priority: so.Mapped[Priority] = so.mapped_column(
+        sa.Enum(Priority),
+        default=Priority.MEDIUM,
+        nullable=False
+    )
+    deadline: so.Mapped[Optional[datetime.datetime]] = so.mapped_column(
+        sa.DateTime(timezone=True),
+        nullable=True,
+        index=True
+    )
+
+    # Relationship to the parent entity (user/assignments/exams))
+    exam_id: so.Mapped[Optional[int]] = so.mapped_column(
+        sa.ForeignKey("exam.id"),
+        nullable=True
+    )
+    assignment_id: so.Mapped[Optional[int]] = so.mapped_column(
+        sa.ForeignKey("assignment.id"),
+        nullable=True
+    )
+
+    exam: so.Mapped[Optional["Exam"]] = so.relationship(
+        back_populates="todo_items"
+    )
+    assignment: so.Mapped[Optional["Assignment"]] = so.relationship(
+        back_populates="todo_items"
+    )
 
 @login.user_loader
 def load_user(id):

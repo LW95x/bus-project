@@ -1,28 +1,37 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %}Registration Page{% endblock %} {%
+block content %}
+<h1 class="display-6 fw-bold text-primary">Register</h1>
+<hr />
 
-{% block title %}Registration Page{% endblock %}
-
-{% block content %}
-    <h1 class="display-6 fw-bold text-primary">Register</h1>
-    <hr>
-
-     <form action='' method="post" novalidate>
-         {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label(class="form-label") }}<br>
-            {{ form.username(class="form-control") }}<br>
-            {% for error in form.username.errors %}
-            <span> {{error }} </span>
-            {% endfor %}
-        </p>
-         <p>
-            {{ form.password.label(class="form-label") }}<br>
-            {{ form.password(class="form-control") }}<br>
-        </p>
-        <div class="d-flex">
-            <a href="{{ url_for('login') }}" class="btn btn-outline-primary">← Login Page</a>
-        {{ form.submit(class="btn btn-outline-primary ms-auto") }}
-        </div>
-        <hr>
-    </form>
+<form action="" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.username.label(class="form-label") }}<br />
+    {{ form.username(class="form-control") }}<br />
+    {% for error in form.username.errors %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.password.label(class="form-label") }}<br />
+    {{ form.password(class="form-control") }}<br />
+    {% for error in form.password.errors %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.confirm_password.label(class="form-label") }} {{
+    form.confirm_password(class="form-control") }} {% for error in
+    form.confirm_password.errors %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+  </p>
+  <div class="d-flex">
+    <a href="{{ url_for('login') }}" class="btn btn-outline-primary"
+      >← Login Page</a
+    >
+    {{ form.submit(class="btn btn-outline-primary ms-auto") }}
+  </div>
+  <hr />
+</form>
 {% endblock %}

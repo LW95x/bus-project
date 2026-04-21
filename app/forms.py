@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, PasswordField, DateTimeLocalField, SelectField, IntegerField, TextAreaField
 from wtforms.fields.simple import BooleanField
-from wtforms.validators import DataRequired, Length, ValidationError, Optional
+from wtforms.validators import DataRequired, EqualTo, Length, ValidationError, Optional
 from datetime import datetime
 from app.models import User, Assignment, Exam, Task, Priority
 from app import db
@@ -49,9 +49,23 @@ class TaskForm(FlaskForm):
     
     submit = SubmitField('Schedule Task')
 
+class SubTaskForm(FlaskForm):
+    description = StringField('Description', validators=[DataRequired(), Length(max=256)])
+    priority = SelectField('Priority', coerce=int, choices=PRIORITY_CHOICES, default=Priority.MEDIUM.value)
+
+    submit = SubmitField('Add Sub-Task')
+
+class SavedMaterialForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(max=256)])
+    url = StringField('URL', validators=[DataRequired(), Length(max=2048)])
+    
+    submit = SubmitField('Add Material')
+
 class RegisterForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=50)])
     password = PasswordField("Password", validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', 
+                                     validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
     submit = SubmitField("Register")
 
     def validate_username(self, username):

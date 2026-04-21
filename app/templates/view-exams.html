@@ -27,7 +27,7 @@ content %}
   </select>
 </form>
 
-<table class="table table-hover table-striped">
+<table class="table table-hover text-center">
   <thead>
     <tr>
       <th>Module</th>
@@ -38,22 +38,24 @@ content %}
       <th>Delete</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody> 
     {% if exams %}
     {% for exam in exams %}
-    <tr>
-      <td>{{ exam.module }}</td>
+    <tr class="{{ exam.urgency }} align-middle position-relative">
+      <td><a href="{{ url_for('view_exam', id=exam.id) }}" class="stretched-link text-decoration-none text-dark">
+            {{ exam.module }}
+        </a></td>
       <td>{{ exam.priority.name.capitalize() }}</td>
       <td>{{ exam.exam_date.strftime('%d %b %Y, %H:%M') }}</td>
       <td>{{ exam.duration_minutes }} mins</td>
-      <td>
+      <td style="position: relative; z-index: 2;">
         <a
           href="{{ url_for('updating_exam', exam_id=exam.id) }}"
           class="btn btn-outline-secondary"
           >Update</a
         >
       </td>
-      <td>
+      <td style="position: relative; z-index: 2;">
         <form
           action="{{ url_for('delete_exam', exam_id=exam.id) }}"
           method="POST"

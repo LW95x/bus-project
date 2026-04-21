@@ -46,7 +46,7 @@
         </select>
 </form>
 
-<table class="table table-hover table-striped">
+<table class="table table-hover text-center">
   <thead>
     <tr>
       <th>Module</th>
@@ -62,8 +62,8 @@
   <tbody>
     {% if tasks %}
     {% for task in tasks %}
-    <tr>
-      <td>{{ task.module }}</td>
+    <tr class="align-middle {{ task.row_class }}">
+      <td class="{{ task.text_style }}">{{ task.module }}</td>
       <td>{{ task.description }}</td>
       <td>{{ task.priority.name.capitalize() }}</td>
       <td>{{ task.scheduled_time.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -82,7 +82,9 @@
           method="POST"
         >
           <input
+          class="form-check-input"
             type="checkbox"
+            style="width: 25px; height: 25px; cursor: pointer;"
             onchange="this.form.submit()"
             {%
             if

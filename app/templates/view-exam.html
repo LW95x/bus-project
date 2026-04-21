@@ -1,0 +1,209 @@
+{% extends "base.html" %} {% block title %}View Exam{% endblock %} {% block
+content %}
+<h1 class="display-6 fw-bold text-primary">Exam - {{ exam.module }}</h1>
+<hr />
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="card-title text-center align-middle mb-3">    
+      Progress: {{ completed_count }}/{{ total_tasks }} Tasks
+    </h5>
+    <div class="progress" style="height: 40px">
+      <div
+        class="progress-bar bg-success fs-6"
+        role="progressbar"
+        style="width: {{ percentage }}%;"
+      >
+        {{ percentage }}%
+      </div>
+    </div>
+  </div>
+</div>
+<table class="table table-hover text-center align-middle">
+  <thead>
+    <tr>
+      <th>Task Description</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% if tasks %}
+      {% for task in tasks %}
+        <tr class="{{ task.row_class }}">
+          <td class="{{ task.text_style }}">
+            {{ task.description }}
+          </td>
+
+          <td>
+              {{ task.priority.name.capitalize() }}
+          </td>
+
+          <td>
+            <form action="{{ url_for('toggle_status', item_type='todo', item_id=task.id) }}" method="POST">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="width: 22px; height: 22px; cursor: pointer;"
+                onchange="this.form.submit()"
+                {% if task.completed %}checked{% endif %}
+              >
+            </form>
+          </td>
+
+          <td>
+            <form action="{{ url_for('delete_todo_item', todo_id=task.id) }}" method="POST">
+              <button
+                type="submit"
+                onclick="return confirm('Delete this sub-task?');"
+                class="btn btn-sm btn-outline-danger"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="4" class="text-center text-muted py-4">
+          No tasks added yet.
+        </td>
+      </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<form 
+  method="POST" 
+  action="{{ url_for('add_exam_subtask', exam_id=exam.id) }}" 
+  class="border rounded p-3 m-3 bg-light mb-4"
+>
+    {{ subtask_form.hidden_tag() }}
+
+    <div class="mb-2 mx-3">
+        {{ subtask_form.description(
+            class="form-control",
+            placeholder="Task description",
+            style="height: 30px; resize: none",
+        ) }}
+    </div>
+
+    <div class="mb-2 mx-3">
+        {{ subtask_form.priority(class="form-select") }}
+    </div>
+
+    <div class="d-flex mt-3 mx-3">
+        <a href="{{ url_for('view_exams') }}" class="btn btn-outline-primary">
+            Return to Exams
+        </a>
+
+        <button type="submit" class="btn btn-outline-primary ms-auto">
+            + Add Sub-Task
+        </button>
+    </div>
+</form>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header bg-primary text-white">Additional Notes</div>
+      <div class="card-body">
+        <form
+          method="POST"
+          action="{{ url_for('save_exam_notes', exam_id=exam.id) }}"
+        >
+          <textarea
+            name="notes"
+            class="form-control"
+            rows="15"
+            style="height: 250px; overflow-y: auto; resize: none"
+            placeholder="Add study notes here..."
+          >
+{{ exam.notes }}</textarea
+          >
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-outline-primary mt-2">
+              Save Notes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header bg-primary text-white">Saved Materials</div>
+
+      <div class="card-body p-0 mt-2">
+        <table class="table table-hover text-center mb-0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>URL</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if exam.saved_materials %}
+                {% for link in exam.saved_materials %}
+            <tr class="align-middle">
+              <td>{{ link.title }}</td>
+
+              <td>
+                <a
+                  href="{{ link.url }}"
+                  target="_blank"
+                  class="text-decoration-none"
+                >
+                  <i class="bi bi-link-45deg"></i> Open Link
+                </a>
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('delete_saved_material', material_id=link.id) }}" class="d-inline">
+                  <button
+                    type="submit"
+                    onclick="return confirm('Delete this saved material?');"
+                    class="btn btn-sm btn-outline-danger"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %} {% else %}
+            <tr>
+              <td colspan="2" class="text-center text-muted py-4">
+                No saved materials added yet.
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+<form method="POST" action="{{ url_for('add_exam_material', exam_id=exam.id) }}" class="border rounded p-3 m-3 bg-light">
+    {{ material_form.hidden_tag() }}
+                <div class="mb-2 mx-3">
+                    {{ material_form.title(class="form-control", placeholder="Resource title", required=True) }}
+                </div>
+
+                <div class="mb-2 mx-3">
+                    {{ material_form.url(class="form-control", placeholder="https://example.com", required=True) }}
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    {{ material_form.submit(
+                    class="btn btn-outline-primary mx-3 mb-2 mt-2",
+                    value="+ Add Material"
+                ) }}
+                </div>
+            </form>
+    </div>
+  </div>
+  {% endblock %}
+</div>

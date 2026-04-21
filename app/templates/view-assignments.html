@@ -28,8 +28,8 @@ content %}
 </select>
 </form>
 
-<table class="table table-hover table-striped">
-  <thead>
+<table class="table table-hover text-center align-middle">
+  <thead class="table-light">
     <tr>
       <th>Title</th>
       <th>Priority</th>
@@ -39,47 +39,77 @@ content %}
       <th>Delete</th>
     </tr>
   </thead>
+
   <tbody>
     {% if assignments %}
-    {% for assignment in assignments %}
-    <tr>
-      <td>{{ assignment.title }}</td>
-      <td>{{ assignment.priority.name.capitalize() }}</td>
-      <td>{{ assignment.due_date.strftime('%Y-%m-%d %H:%M') }}</td>
-      <td>
-        <form
-          action="{{ url_for('toggle_status', item_type='assignment', item_id=assignment.id) }}"
-          method="POST"
-        >
-          <input
-            type="checkbox"
-            onchange="this.form.submit()"
-            {%
-            if
-            assignment.completed
-            %}checked{%
-            endif
-            %}
-          />
-        </form>
-      </td>
-      <td>
-        <a
-          href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}"
-          class="btn btn-outline-secondary"
-          >Update</a
-        >
-        <td>
-          <form action="{{ url_for('delete_assignment', assignment_id=assignment.id) }}" method="POST" style="display:inline;">
-            <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-outline-danger">Delete</button>
-          </form>
-        </td>
-      </td>
-    </tr>
-    {% endfor %}
+      {% for assignment in assignments %}
+        <tr class="{{ assignment.row_class }} position-relative">
+          <td class="{{ assignment.text_style }}">
+            <a 
+              href="{{ url_for('view_assignment', id=assignment.id) }}" 
+              class="stretched-link text-decoration-none text-dark fw-semibold"
+            >
+              {{ assignment.title }}
+            </a>
+          </td>
+
+          <td>
+            <span class="badge rounded-pill bg-light text-dark border">
+              {{ assignment.priority.name.capitalize() }}
+            </span>
+          </td>
+
+          <td>
+            {{ assignment.due_date.strftime('%Y-%m-%d %H:%M') }}
+          </td>
+
+          <td>
+            <form
+              action="{{ url_for('toggle_status', item_type='assignment', item_id=assignment.id) }}"
+              method="POST"
+              class="d-flex justify-content-center"
+            >
+              <input
+                class="form-check-input"
+                type="checkbox"
+                style="width: 24px; height: 24px; cursor: pointer; position: relative; z-index: 2;"
+                onchange="this.form.submit()"
+                {% if assignment.completed %}checked{% endif %}
+              >
+            </form>
+          </td>
+
+          <td style="position: relative; z-index: 2;">
+            <a
+              href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}"
+              class="btn btn-sm btn-outline-secondary"
+            >
+              Update
+            </a>
+          </td>
+
+          <td style="position: relative; z-index: 2;">
+            <form 
+              action="{{ url_for('delete_assignment', assignment_id=assignment.id) }}" 
+              method="POST" 
+              class="d-inline"
+            >
+              <button 
+                type="submit" 
+                onclick="return confirm('Are you sure?')" 
+                class="btn btn-sm btn-outline-danger"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
     {% else %}
       <tr>
-        <td colspan="6" class="text-center">No assignments match the selected filters.</td>
+        <td colspan="6" class="text-center text-muted py-4">
+          No assignments match the selected filters.
+        </td>
       </tr>
     {% endif %}
   </tbody>

@@ -1,66 +1,139 @@
-{% extends "base.html" %}
-
-{% block title %}Tasks{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Tasks{% endblock %} {% block content
+%}
 
 <h1 class="display-6 fw-bold text-primary">Your Tasks</h1>
-<hr>
-{% if tasks %}
+<hr />
+
+<form method="GET" class="d-flex gap-2 mb-1">
+  <select name="type" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="ascending" {% if type == "ascending" %}selected{% endif %}>
+      Earliest
+    </option>
+    <option value="descending" {% if type == "descending" %}selected{% endif %}>
+      Latest
+    </option>
+  </select>
+
+<select name="priority" class="form-select w-auto" onchange="this.form.submit()">
+  <option value="" {% if not priority %}selected{% endif %}>All Priorities</option>
+    <option value="1" {% if priority == "1" %}selected{% endif %}>
+      High
+    </option>
+    <option value="2" {% if priority == "2" %}selected{% endif %}>
+      Medium
+    </option>
+    <option value="3" {% if priority == "3" %}selected{% endif %}>
+      Low
+    </option>
+</select>
+
+  <select name="exam_id" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="" {% if not selected_exam %}selected{% endif %}>All Exams</option>
+            {% for exam in user_exams %}
+                <option value="{{ exam.id }}" {% if selected_exam == exam.id|string %}selected{% endif %}>
+                    Exam: {{ exam.module }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="assignment_id" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="" {% if not selected_assign %}selected{% endif %}>All Assignments</option>
+            {% for assign in user_assigns %}
+                <option value="{{ assign.id }}" {% if selected_assign == assign.id|string %}selected{% endif %}>
+                    Assignment: {{ assign.title }}
+                </option>
+            {% endfor %}
+        </select>
+</form>
+
 <table class="table table-hover table-striped">
-    <thead>
+  <thead>
     <tr>
-        <th>Module</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th>Scheduled For</th>
-        <th>Context</th>
-        <th>Status</th>
-        <th>Actions</th>
+      <th>Module</th>
+      <th>Description</th>
+      <th>Priority</th>
+      <th>Scheduled For</th>
+      <th>Context</th>
+      <th>Status</th>
+      <th>Update</th>
+      <th>Delete</th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
+    {% if tasks %}
     {% for task in tasks %}
     <tr>
-       <td>{{ task.module }}</td>
-        <td>{{ task.description }}</td>
-        <td>{{ task.priority.name.capitalize() }}</td>
-        <td>{{ task.scheduled_time.strftime('%Y-%m-%d %H:%M') }}</td>
-        <td>
-            {% if task.exam %}
-                <p><b>Exam:</b> {{ task.exam.module }}</p>
-            {% elif task.assignment %}
-                <p><b>Coursework:</b> {{ task.assignment.title }}</p>
-            {% else %}
-                <p>General</p>
-            {% endif %}
-        </td>
-        <td>
-            <form action="{{ url_for('toggle_status', item_type='task', item_id=task.id) }}" method="POST">
-                <input type="checkbox" onchange="this.form.submit()" 
-                {% if task.completed %}checked{% endif %}>
-            </form>
-        </td>
-        <td>
-            <a href="{{ url_for('updating_task', task_id=task.id) }}" class="btn btn-outline-secondary">Update</a>
-        </td>
+      <td>{{ task.module }}</td>
+      <td>{{ task.description }}</td>
+      <td>{{ task.priority.name.capitalize() }}</td>
+      <td>{{ task.scheduled_time.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>
+        {% if task.exam %}
+        <p><b>Exam:</b> {{ task.exam.module }}</p>
+        {% elif task.assignment %}
+        <p><b>Coursework:</b> {{ task.assignment.title }}</p>
+        {% else %}
+        <p>General</p>
+        {% endif %}
+      </td>
+      <td>
+        <form
+          action="{{ url_for('toggle_status', item_type='task', item_id=task.id) }}"
+          method="POST"
+        >
+          <input
+            type="checkbox"
+            onchange="this.form.submit()"
+            {%
+            if
+            task.completed
+            %}checked{%
+            endif
+            %}
+          />
+        </form>
+      </td>
+      <td>
+        <a
+          href="{{ url_for('updating_task', task_id=task.id) }}"
+          class="btn btn-outline-secondary"
+          >Update</a
+        >
+      </td>
+      <td>
+        <form
+          action="{{ url_for('delete_task', task_id=task.id) }}"
+          method="POST"
+          style="display: inline"
+        >
+          <button
+            type="submit"
+            onclick="return confirm('Are you sure?');"
+            class="btn btn-outline-danger"
+          >
+            Delete
+          </button>
+        </form>
+      </td>
     </tr>
     {% endfor %}
-    </tbody>
+    {% else %}
+      <tr>
+        <td colspan="8" class="text-center">No tasks match the selected filters.</td>
+      </tr>
+    {% endif %}
+  </tbody>
 </table>
+
 <hr />
 <div class="d-flex">
   <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
     >Return to Home</a
   >
-  <a
-    href="{{ url_for('add_task') }}"
-    class="btn btn-outline-primary ms-auto"
+  <a href="{{ url_for('add_task') }}" class="btn btn-outline-primary ms-auto"
     >Add New Task</a
   >
 </div>
-{% else %}
-<p><a href="{{ url_for('add_task') }}" class="btn btn-outline-primary">No tasks found. Add one here</a></p>
 
-{% endif %}
+
 {% endblock %}

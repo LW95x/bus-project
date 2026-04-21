@@ -3,18 +3,43 @@ content %}
 
 <h1 class="display-6 fw-bold text-primary">Your Exams</h1>
 <hr />
-{% if exams %}
+<form method="GET" class="d-flex gap-2 mb-1">
+  <select name="type" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="ascending" {% if type == "ascending" %}selected{% endif %}>
+      Earliest
+    </option>
+    <option value="descending" {% if type == "descending" %}selected{% endif %}>
+      Latest
+    </option>
+  </select>
+
+  <select name="priority" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="" {% if not priority %}selected{% endif %}>All Priorities</option>
+    <option value="1" {% if priority == "1" %}selected{% endif %}>
+      High
+    </option>
+    <option value="2" {% if priority == "2" %}selected{% endif %}>
+      Medium
+    </option>
+    <option value="3" {% if priority == "3" %}selected{% endif %}>
+      Low
+    </option>
+  </select>
+</form>
+
 <table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>Module</th>
       <th>Priority</th>
-      <th>Date & Time</th>
+      <th>Date &amp; Time</th>
       <th>Duration</th>
-      <th>Actions</th>
+      <th>Update</th>
+      <th>Delete</th>
     </tr>
   </thead>
   <tbody>
+    {% if exams %}
     {% for exam in exams %}
     <tr>
       <td>{{ exam.module }}</td>
@@ -28,29 +53,41 @@ content %}
           >Update</a
         >
       </td>
+      <td>
+        <form
+          action="{{ url_for('delete_exam', exam_id=exam.id) }}"
+          method="POST"
+          style="display: inline"
+        >
+          <button
+            type="submit"
+            onclick="return confirm('Are you sure?');"
+            class="btn btn-outline-danger"
+          >
+            Delete
+          </button>
+        </form>
+      </td>
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="6" class="text-center">No exams match the selected filters.</td>
+      </tr>
+    {% endif %}
   </tbody>
 </table>
+
 <hr />
 <div class="d-flex">
   <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
     >Return to Home</a
   >
-  <a href="{{ url_for('add_exam') }}" class="btn btn-outline-primary ms-auto"
+  <a
+    href="{{ url_for('add_exam') }}"
+    class="btn btn-outline-primary ms-auto"
     >Add New Exam</a
   >
 </div>
-{% else %}
-<div>
-  <p class="alert alert-info text-center">No exams found.</p>
-</div>
-<div class="d-flex">
-  <a href="{{ url_for('index') }}" class="btn btn-outline-primary"
-    >Return to Home</a
-  >
-  <a href="{{ url_for('add_exam') }}" class="btn btn-outline-primary ms-auto"
-    >Add New Exam</a
-  >
-</div>
-{% endif %} {% endblock %}
+
+{% endblock %}

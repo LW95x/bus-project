@@ -107,7 +107,7 @@ def view_assignments():
         delta = (assignment.due_date.date() - today).days
 
         if assignment.completed:
-            assignment.row_class = "text-muted opacity-50"
+            assignment.urgency = "text-muted opacity-50"
             assignment.text_style = "text-decoration-line-through"
 
         elif delta < 0:

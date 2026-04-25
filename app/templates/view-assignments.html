@@ -43,24 +43,22 @@ content %}
   <tbody>
     {% if assignments %}
       {% for assignment in assignments %}
-        <tr class="{{ assignment.row_class }} position-relative">
+        <tr class="{{ assignment.urgency }} position-relative">
           <td class="{{ assignment.text_style }}">
             <a 
               href="{{ url_for('view_assignment', id=assignment.id) }}" 
-              class="stretched-link text-decoration-none text-dark fw-semibold"
+              class="stretched-link text-decoration-none text-dark"
             >
               {{ assignment.title }}
             </a>
           </td>
 
           <td>
-            <span class="badge rounded-pill bg-light text-dark border">
               {{ assignment.priority.name.capitalize() }}
-            </span>
           </td>
 
           <td>
-            {{ assignment.due_date.strftime('%Y-%m-%d %H:%M') }}
+            {{ assignment.due_date.strftime('%d %b %Y, %H:%M') }}
           </td>
 
           <td>
@@ -82,7 +80,7 @@ content %}
           <td style="position: relative; z-index: 2;">
             <a
               href="{{ url_for('updating_assignment', assignment_id=assignment.id) }}"
-              class="btn btn-sm btn-outline-secondary"
+              class="btn btn-outline-secondary"
             >
               Update
             </a>
@@ -97,7 +95,7 @@ content %}
               <button 
                 type="submit" 
                 onclick="return confirm('Are you sure?')" 
-                class="btn btn-sm btn-outline-danger"
+                class="btn btn-outline-danger"
               >
                 Delete
               </button>

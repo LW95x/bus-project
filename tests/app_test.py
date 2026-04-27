@@ -82,7 +82,8 @@ def test_s1_create_assignment_card(logged_in_client):
     dashboard = logged_in_client.get('/view-assignments')
     assert b'Coursework Essay' in dashboard.data
 
-    # Error path: empty title -> form re-rendered, nothing saved
+    # Error path: empty title -> form re-rendered, nothing saved,
+    # and the previously-saved card is still on the dashboard
     before_count = Assignment.query.count()
     resp = logged_in_client.post('/add-assignment', data={
         'title': '',
@@ -91,6 +92,8 @@ def test_s1_create_assignment_card(logged_in_client):
     })
     assert resp.status_code == 200
     assert Assignment.query.count() == before_count
+    dashboard = logged_in_client.get('/view-assignments')
+    assert b'Coursework Essay' in dashboard.data
 
 
 # ---------------------------------------------------------------
@@ -108,14 +111,19 @@ def test_s2_view_assignment_cards(logged_in_client):
     resp = logged_in_client.get('/view-assignments')
     assert b'Add New Assignment' in resp.data
 
-    # With one assignment: title is visible on the dashboard
+    # With one assignment: title and due date are visible on the dashboard.
+    # The dashboard formats dates as e.g. "02 May 2026" (see view-assignments.html),
+    # so we format the same date the same way for our assertion.
+    due_date = _future(5)
+    expected_date = (datetime.now() + timedelta(days=5)).strftime('%d %b %Y').encode()
     logged_in_client.post('/add-assignment', data={
         'title': 'My Essay',
-        'due_date': _future(5),
+        'due_date': due_date,
         'priority': 2,
     })
     resp = logged_in_client.get('/view-assignments')
     assert b'My Essay' in resp.data
+    assert expected_date in resp.data
 
 
 # ---------------------------------------------------------------
@@ -136,6 +144,11 @@ def test_s3_sort_assignments_by_due_date(logged_in_client):
     logged_in_client.post('/add-assignment', data={
         'title': 'Gamma', 'due_date': _future(10), 'priority': 2,
     })
+
+    # The sorting dropdown should expose both options
+    page = logged_in_client.get('/view-assignments').data
+    assert b'ascending' in page
+    assert b'descending' in page
 
     asc = logged_in_client.get('/view-assignments?type=ascending').data
     assert asc.index(b'Alpha') < asc.index(b'Beta') < asc.index(b'Gamma')
@@ -164,6 +177,9 @@ def test_s4_deadline_urgency_colour_change(logged_in_client):
     })
 
     page = logged_in_client.get('/view-assignments').data
+    assert b'Soon' in page
+    assert b'Mid' in page
+    assert b'Far' in page
     assert b'table-danger' in page    # red, < 1 week
     assert b'table-warning' in page   # yellow, 1-2 weeks
     assert b'table-info' in page      # blue, 2+ weeks
@@ -188,6 +204,7 @@ def test_s5_edit_existing_assignment(logged_in_client):
 
     page = logged_in_client.get('/view-assignments').data
     assert b'New Title' in page
+    assert b'Old Title' not in page
 
 
 # ---------------------------------------------------------------
@@ -205,6 +222,7 @@ def test_s6_delete_existing_assignment(logged_in_client):
 
     logged_in_client.post(f'/delete-assignment/{a.id}')
 
+    assert Assignment.query.count() == 0
     page = logged_in_client.get('/view-assignments').data
     assert b'To Delete' not in page
 
@@ -261,6 +279,7 @@ def test_s8_organise_by_module(logged_in_client):
 
     page = logged_in_client.get(f'/view-tasks?assignment_id={a.id}').data
     assert b'CS101' in page
+    assert b'Read chapter 1' in page
 
 
 # ---------------------------------------------------------------
@@ -279,10 +298,11 @@ def test_s9_attach_references(logged_in_client):
     })
     a = Assignment.query.first()
 
-    logged_in_client.post(f'/assignments/{a.id}/materials/add', data={
+    resp = logged_in_client.post(f'/assignments/{a.id}/materials/add', data={
         'title': 'Reading List',
         'url': 'https://library.example.com/list',
     })
+    assert resp.status_code in (302, 200)
 
     page = logged_in_client.get(f'/assignment/{a.id}').data
     assert b'Reading List' in page
@@ -321,20 +341,25 @@ def test_s10_attach_study_session(logged_in_client):
     page = logged_in_client.get(f'/view-tasks?assignment_id={a.id}').data
     assert b'Library session' in page
 
-    # Update + delete the study session
+    # Update the study session - change the description so the edit is visible
     t = Task.query.first()
     logged_in_client.post(f'/update-task/{t.id}', data={
         'module': 'CS101',
-        'description': 'Library session',
+        'description': 'Updated library session',
         'scheduled_time': _future(5),
         'duration_minutes': 90,
         'priority': 2,
         'exam_id': 0,
         'assignment_id': a.id,
     })
+    page = logged_in_client.get(f'/view-tasks?assignment_id={a.id}').data
+    assert b'Updated library session' in page
+    assert b'Library session' not in page
+
+    # Delete the study session
     logged_in_client.post(f'/delete-task/{t.id}')
     page = logged_in_client.get(f'/view-tasks?assignment_id={a.id}').data
-    assert b'Library session' not in page
+    assert b'Updated library session' not in page
 
 
 # ---------------------------------------------------------------
@@ -362,6 +387,14 @@ def test_s12_add_notes_and_todos(logged_in_client):
     })
     page = logged_in_client.get(f'/assignment/{a.id}').data
     assert b'Remember to cite sources' in page
+
+    # Edit the note - the new note replaces the old one
+    logged_in_client.post(f'/assignments/{a.id}/notes', data={
+        'notes': 'Updated note about citations',
+    })
+    page = logged_in_client.get(f'/assignment/{a.id}').data
+    assert b'Updated note about citations' in page
+    assert b'Remember to cite sources' not in page
 
     # Add a to-do, reload, see it
     logged_in_client.post(f'/assignments/{a.id}/subtasks/add', data={
